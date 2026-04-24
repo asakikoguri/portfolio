@@ -1,0 +1,1280 @@
+
+@charset "UTF-8";
+
+:root {
+  /* カラー定義 */
+  --main: #EFEEC2;
+  --bg-color: #F8F6F3;
+  --text: #373737;
+  --white: #FFFFFF;
+
+  /* フォント定義 */
+  --font-jp-gothic: "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "Sans-serif";
+  --font-jp-mincho: "Shippori Mincho", serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-black);
+  /* 基本はヒラギノ角ゴ (W3相当) */
+  font-family: var(--font-jp-gothic);
+  font-weight: 300; 
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 本文やメッセージを「しっぽり明朝」にする場合 */
+.welcome-inner p, 
+.about-text, 
+.works-description {
+  font-family: var(--font-jp-mincho);
+  font-size: 16px; /* デザインガイドの(16) */
+}
+
+/* 英語のWeb Designer / Developer 部分 */
+.top-role {
+  font-family: var(--font-jp-gothic);
+  font-weight: 300;
+  font-size: 24px; /* デザインガイドの(24) */
+}
+
+/* MENUなどの太字 */
+.menu-bar, .menu-title {
+  font-weight: 600; /* デザインガイドのW6 */
+}
+
+
+
+.top {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ヘッダー */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px; /* 必要に応じて高さを指定 */
+  display: flex;
+  align-items: center; /* 縦方向の真ん中 */
+  padding: 0 40px;    /* 左右の余白 */
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.menu-left {
+  margin-right: auto; /* 右側の余白を全開にして、自分を左に押し出す */
+  display: flex;
+  align-items: center;
+}
+
+.menu-left a {
+  margin-right: 24px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* メニューバー本体 */
+.menu-bar {
+  background: none;
+  border: none;
+  width: 40px;      /* 少し大きめに確保 */
+  height: 24px;     /* 線の可動域を確保 */
+  position: relative;
+  cursor: pointer;
+  z-index: 100;
+  padding: 0;       /* 余計な余白を消す */
+  margin-left: auto;  /* 左側の余白を全開にして、自分を右に押し出す */
+
+}
+
+/* 中の2本線 */
+.menu-bar span {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: var(--text); /* 変数で色を指定 */
+  position: absolute;
+  left: 0;
+  transition: transform 0.3s; /* アニメーション用 */
+}
+
+.menu-bar span:first-child { top: 4px; }
+.menu-bar span:last-child { top: 16px; }
+
+/* クロスするアニメーション */
+.menu-bar.active span:first-child { transform: translateY(6px) rotate(20deg); }
+.menu-bar.active span:last-child { transform: translateY(-5px) rotate(-20deg); }
+
+
+/* ナビゲーションのベース */
+.main-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;       /* スマホ版：全画面 */
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.6); /* 白の透過 */
+  backdrop-filter: blur(15px);                /* すりガラス効果 */
+  -webkit-backdrop-filter: blur(15px);        /* Safari用 */
+  z-index: 90;                                /* ボタン(100)より下 */
+  
+  /* 初期状態：右側に隠しておく */
+  transform: translateX(100%);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* スッと動く質感 */
+}
+
+/* activeクラスがついたら画面内へ */
+.main-nav.active {
+  transform: translateX(0);
+}
+
+/* 中身の配置 */
+.nav-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.main-nav ul {
+  list-style: none;
+  padding: 0;
+  text-align: right;
+}
+
+.main-nav li {
+  margin: 40px 0; /* 縦並びのゆったりした余白 */
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 20px;       /* 存在感のあるサイズ */
+  letter-spacing: 0.2em; /* 字間を広げて上品に */
+  display: inline-block;
+  transition: opacity 0.3s;
+}
+
+.main-nav a:hover {
+  opacity: 0.5;
+}
+
+/* --- デスクトップ版：画面半分 --- */
+@media screen and (min-width: 1025px) {
+  .main-nav {
+    width: 50%; /* 画面の半分 */
+  }
+}
+
+
+/* 中央メッセージ：枠内を流れる */
+.welcome {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; /* 枠の幅 */
+  border: 1px solid #a2a2a2;
+  border-radius: 50px;
+  padding: 8px 20px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.welcome-inner p {
+  display: inline-block;
+  white-space: nowrap; /* 改行させない */
+  font-family: var(--font-en);
+  font-size: 13px;
+  /* ★ 1sから20sに変更（数字が大きいほどゆっくり流れます） */
+  animation: flow-text 20s linear infinite; 
+}
+
+
+/* アニメーションの中身 */
+@keyframes flow-text {
+  0% { transform: translateX(0); }
+  /* ★ 全体の半分（50%）まで動いた瞬間に 0 に戻ることで無限ループに見せます */
+  100% { transform: translateX(-50%); } 
+}
+
+
+
+.top-obj {
+  position: absolute;
+  right: 15%;
+  bottom: 53%;
+}
+
+.obj-bar {
+  width: 80px;
+  height: 5px;
+  margin-top: 10px;
+  background: #a2a2a2;
+  position: relative; /* 子要素（丸）の基準になる */
+  transform-origin: center;
+  /* ease-in-outをやめて linear にするか、揺れ方を調整 */
+  animation: obj-swing 4s infinite alternate;
+}
+
+/* 共通の「揺れ」：左右の端で傾き、真ん中で水平 */
+@keyframes obj-swing {
+  0% { transform: rotate(-15deg); }
+  50% { transform: rotate(0deg); }
+  100% { transform: rotate(15deg); }
+}
+
+.obj-circle-y {
+  width: 30px;
+  height: 30px;
+  background: var(--main);
+  border-radius: 50%;
+  position: absolute;
+  top: -30px; 
+  left: 0;
+  mix-blend-mode: multiply;
+  animation: slide-on-bar 4s infinite alternate;
+}
+
+/* 丸のスライド：棒の中（0〜100pxの間）を動かす */
+@keyframes slide-on-bar {
+  0% { left: -5px; }    /* 左端（少しはみ出すくらいが可愛い） */
+  50% { left: 25px; }   /* 中央 */
+  100% { left: 60px; }  /* 右端 */
+}
+
+
+.obj-circle-w {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 17px;
+  left: 22px;
+}
+
+/* 役職テキスト */
+.top-role {
+  position: absolute;
+  left: 8vw;
+  bottom: 220px;
+  font-size: 24px;
+}
+
+/* 流れる画像エリア */
+.top-img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 70%;
+  overflow: hidden; /* はみ出た画像を見えなくする */
+  padding: 0;  /* 上下に少し余白 */
+}
+
+.img-track {
+  display: flex;
+  width: calc(250px * 10); /* 画像の横幅 × 枚数（10枚分） */
+  animation: loop-slide 30s linear infinite; /* 30秒かけて1周 */
+}
+
+.img-track img {
+  width: 200px;      /* 画像の横幅（Figmaに合わせて調整してね） */
+  height: 300px;     /* 画像の高さ（揃えておくと綺麗！） */
+  object-fit: cover; /* 比率が違っても綺麗に切り抜く魔法の1行 */
+  margin-right: 5px; /* 画像同士の間隔 */
+}
+
+@keyframes loop-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* 5枚分（1セット分）の横幅をマイナスにする */
+    /* (250px + 20px) * 5枚 = 1350px */
+    transform: translateX(-1000px);
+  }
+}
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .menu-left { display: none; }
+  .top-role { font-size: 18px; bottom: 250px; }
+  .top-img {width: 100%; }
+  .top-img img { width: 150px; height: 200px; }
+}
+
+
+.img-track img {
+  /* ★ここがポイント：最初から白っぽくぼかす */
+  filter: blur(0.5px) brightness(1) opacity(0.8);
+  background-color: #fff; /* 背景を白にしておくとopacityで白く濁ります */
+  transition: all 0.5s ease; /* 変化をなめらかに */
+}
+
+/* ★ホバーした時：すべて元通りにする */
+.img-track img:hover {
+  filter: blur(0) brightness(1) opacity(1);
+  transform: scale(1.05); /* ちょっと大きくすると「選んでる感」が出ます */
+}
+
+
+
+/* --------aboutセクション---------- */
+/* --- Aboutセクション全体 --- */
+section {
+  width: 100%;
+  padding: 100px 0;
+  /* 背景はbody（top）と統一されている前提 */
+}
+
+/* --- タイトル：画面左端から35%の位置に / がくるように --- */
+.sec-title {
+  display: block;
+  width: 100%;
+  /* 左側に35%の余白を作ることで、コンテンツの開始位置と揃える */
+  padding-left: 8vw; 
+  text-align: left;
+  
+  font-family: var(--font-en);
+  font-size: 24px;
+  font-weight: normal;
+  margin-bottom: 60px;
+}
+
+/* --- コンテンツエリア：ここを右側65%に制限する --- */
+.inner {
+  /* margin-left: auto で右に寄せ、幅を65%にする */
+  margin-left: auto;
+  margin-right: 0;
+  width: 70%;
+  
+  /* max-widthを解除（または広げる）して、65%の幅を維持させる */
+  max-width: none; 
+  padding: 0 40px 0 0; /* 右側だけに少し余白、左はタイトルと揃えるため0 */
+}
+
+/* --- フレックスボックス：中身の高さ揃え --- */
+.about-flex {
+  display: flex;
+  align-items: stretch; /* 写真の高さをテキストに合わせる */
+  gap: 60px;
+  text-align: left;
+}
+
+.about-detail .about-flex{
+  justify-content: center;
+}
+
+.about-detail .inner {
+  width: 100%;
+}
+
+.about .about-text{
+  max-width: 600px;
+}
+
+
+.about-img img {
+  width: 180px;
+  height: auto;    /* 親の高さ（テキストの高さ）に合わせる */
+  object-fit: cover; /* 歪まないように切り抜き */
+  display: block;
+}
+
+/* --- テキスト：残りの幅を埋める --- */
+.about-text {
+  flex: 1;
+  max-width: 500px;
+}
+
+.name-en {
+  font-size: 18px;
+  margin-bottom: 30px;
+  letter-spacing: 0.1em;
+}
+
+.name-kana {
+  font-size: 0.6em;      /* 漢字に対して約60%の大きさに */
+  vertical-align: middle; /* 漢字の高さの中央に合わせる（お好みで） */
+  margin-left: 0.5em;    /* 漢字との間に少し隙間を作る */
+  color: #3b3b3b;           /* 少し色を薄くすると、より主役が引き立ちます */
+  letter-spacing: 0;     /* カッコ内は詰め気味にすると綺麗 */
+}
+
+.profile-desc p {
+  line-height: 2; /* 行間を広めに取ると読みやすく上品に */
+  margin-bottom: 1em;
+  font-size: 15px;
+}
+/* --- 詳しく見るボタン --- */
+.more-btn {
+  margin-top: 40px;
+}
+
+
+.more-btn a {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc; /* 下のライン */
+  padding-right: 100px; /* ラインを長く見せる */
+  position: relative;
+}
+
+/* ラインの端の「・」を再現 */
+.more-btn a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -4px; /* ラインの位置に合わせる */
+  width: 8px;
+  height: 8px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+
+
+
+/* 画面幅が768px以下の時に適用 */
+@media (max-width: 768px) {
+  /* 2. 右寄せにしていた inner を中央に戻す */
+  .inner {
+    width: 90%;       /* 画面端にピタッとつかないよう少し絞る */
+    margin-left: auto; /* 左右autoで中央寄せ */
+    margin-right: auto;
+    padding: 0;        /* 余白をリセット */
+  }
+
+  /* 3. 中身を縦並びにして中央揃えにする */
+  .about-flex {
+    flex-direction: column; 
+    align-items: center;    /* 子要素（画像とテキスト）を中央に */
+    text-align: center;     /* テキスト自体も中央寄せ */
+    gap: 50px;
+  }
+
+  /* 4. 画像のサイズ調整 */
+  .about-img {
+    flex: 0 0 auto;    /* PC版の幅固定を解除 */
+    width: 100%;       /* SPでは枠いっぱいに */
+    max-width: 280px;  /* 大きくなりすぎないよう制限 */
+    justify-items: center;
+  }
+
+  .about-img img {
+    height: auto;      /* テキストに合わせる設定を解除して、写真本来の比率に */
+    width: 150px;
+  }
+
+
+  .name-en {
+    text-align: left;
+  }
+
+  /* 5. プロフィール文の微調整 */
+  .profile-desc p {
+    text-align: left;       /* 文章は左揃えの方が読みやすい */
+    max-width: 100%;
+  }
+
+  /* 6. ボタンを右寄せから中央（または右）へ */
+  .more-btn {
+    text-align: center; /* デザインに合わせて調整してね */
+    margin-top: 30px;
+  }
+}
+
+
+/* -----------about下層ページ------------ */
+
+.about-detail.container {
+  max-width: 1200px;
+  width: 100%;
+}
+.about-detail.row {
+  padding: 36px 70px;
+}
+
+section.skills{
+  padding: 50px 0 26px;
+}
+
+/* サブタイトル共通 */
+.about-sub-title {
+    font-size: 18px;
+    font-weight: normal;
+    color: #888;
+    margin-bottom: 30px;
+    letter-spacing: 0.1em;
+}
+
+/* Skillsエリア */
+.about-skills {
+    margin-top: 100px;
+    border-top: 1px solid #eee;
+    padding-top: 60px;
+}
+
+.skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.skill-category h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.skill-category p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* 自走力の文章ボックス */
+.self-learning {
+    background-color: #f9f8f6; /* 優しいベージュ */
+    padding: 40px;
+    border-radius: 2px;
+}
+
+.self-learning h5 {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #888;
+}
+
+.self-learning p {
+    font-size: 14px;
+    line-height: 2;
+    color: #444;
+}
+
+/* Aesthetic & Inspiration */
+.about-personal {
+    margin-top: 80px;
+    padding-bottom: 100px;
+}
+
+.personal-flex {
+    display: flex;
+    gap: 60px;
+}
+
+.personal-item {
+    flex: 1;
+}
+
+.small-text {
+    font-size: 13px;
+    color: #999;
+    margin-top: 10px;
+}
+
+
+section.favorites{
+    padding: 100px 0 0;
+}
+
+@media (max-width: 768px) {
+    .personal-flex {
+        flex-direction: column;
+    }
+}
+
+
+/* -------- favoritesセクション ----------- */
+
+.favorites {
+    padding: 100px 0;
+}
+
+.favorites .inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 80px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 横3列 */
+    gap: 80px 40px; /* 上下の間隔を広く（80px）取ることで「コラム感」を消す */
+    margin-top: 60px;
+}
+
+.gallery-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中央揃え */
+    text-align: center;
+}
+
+.gallery-img {
+    width: 80%; /* 画像をあえて少し小さく表示 */
+    aspect-ratio: 1 / 1; /* 正方形で統一感を出す */
+    overflow: hidden;
+    margin-bottom: 20px;
+    background-color: #f9f9f9; /* 画像がない時も形がわかるように */
+}
+
+.gallery-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* ホバー時の控えめな動き */
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-text h3 {
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.gallery-text p {
+    font-size: 11px;
+    line-height: 1.8;
+    color: #888;
+    max-width: 180px; /* テキストの幅を絞って余白を作る */
+    margin: 0 auto;
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+    .favorites .inner {
+        padding: 0 30px;
+    }
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr); /* スマホは横2列 */
+        gap: 40px 20px;
+    }
+    .gallery-img {
+        width: 100%; /* スマホでは画面幅に合わせて少し大きく */
+    }
+}
+/* --------worksセクション----------- */
+
+.works .inner {
+  width: 100%;          /* 65%などの幅制限を解除 */
+  max-width: 1000px;    /* サイト全体の最大幅に合わせる */
+  margin: 0 auto;       /* 左右の余白を均等にして中央へ */
+  padding: 0 80px;      /* スマホ用の端の余白 */
+  
+  /* これが重要！右寄せの設定を打ち消します */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.works-list {
+  display: flex;
+  flex-direction: column;
+  gap: 120px; /* 実績ごとの縦の間隔 */
+}
+
+.works-item {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  /* margin-right: 80px; */
+}
+
+/* ★2番目、4番目などの偶数アイテムは左右反転 */
+.works-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.works-img {
+  flex: 0 0 55%; /* 画像を少し大きめに */
+}
+
+.works-img img {
+  width: 100%;
+  height: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* ほんの少し浮かせると上品 */
+}
+
+.works-text {
+  flex: 1;
+}
+
+.works-text h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+
+.works-desc {
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.works-tag {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 30px;
+}
+
+.works-yotei {
+  font-size: 12px;
+  color: #3b3b3b;
+}
+
+
+/* --- 画像の代わりにグレーのボックスを表示 --- */
+.works-img {
+  flex: 0 0 50%;
+  aspect-ratio: 16 / 9; /* ★重要：ここで好みのサイズ比率を指定（1.5 / 1 などでもOK） */
+  background-color: #DDDDDD; /* 薄いグレー */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 「画像が入る場所」とわかるように文字を入れてもOK（任意） */
+/* .works-img::after {
+  color: #999;
+  font-size: 14px;
+  font-family: var(--font-en);
+} */
+
+/* 本番の画像を入れた時のためにこれも残しておくと便利 */
+.works-img img {
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* Worksセクションの「すべて見る」ボタン */
+.works-link {
+  margin-top: 60px;
+}
+
+.works-link a {
+  display: inline-block;
+  text-decoration: none; /* デフォルトの下線は消す */
+  color: #333;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  padding-bottom: 4px;      /* 文字と線の間の隙間 */
+  border-bottom: 1px solid #ccc; /* これが「デザインされた下線」 */
+  transition: all 0.3s;
+}
+
+.works-link a span {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 12px;
+  transition: transform 0.3s; /* 矢印を動かすための設定 */
+}
+
+/* ホバーした時の動き */
+.works-link a:hover {
+  border-bottom-color: #333; /* 線を濃くする */
+  opacity: 0.7;
+}
+
+.works-link a:hover span {
+  transform: translate(3px, -3px); /* 矢印が右上へひょこっと動く */
+}
+
+
+@media (max-width: 768px) {
+
+
+  .works-list {
+    gap: 80px;
+  }
+
+  .works-item, 
+  .works-item:nth-child(even) {
+    flex-direction: column; /* 全て縦並びに */
+    text-align: center;
+    margin-right: 0;
+  }
+
+  .works-img {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .works-text {
+    width: 100%;
+    justify-items: left;
+  }
+
+  /* スマホ版の「詳しくみる」は中央寄せにするなら */
+  .works-text .more-btn {
+    text-align: center;
+  }
+}
+
+
+.contact {
+  padding: 0; /* 背景をいっぱいに広げるため */
+  position: relative;
+  min-height: 80vh; /* 画面の8割くらいの高さを持たせる */
+  display: flex;
+  align-items: center;
+}
+
+/* Contactセクション内のinnerだけ設定をリセット */
+.contact .inner {
+  width: 100%;          /* 65%などの幅制限を解除 */
+  max-width: 1000px;    /* サイト全体の最大幅に合わせる */
+  margin: 0 auto;       /* 左右の余白を均等にして中央へ */
+  padding: 0 40px;      /* スマホ用の端の余白 */
+  
+  /* これが重要！右寄せの設定を打ち消します */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* 中身を中央に寄せる */
+  text-align: center;
+}
+
+.contact-bg {
+  width: 100%;
+  height: 100%;
+  /* ★ここに好きな写真を指定。overlayで少し暗く（または明るく）して文字を読みやすく */
+  background: linear-gradient(rgba(245, 241, 224, 0.4), rgba(245, 241, 224, 0.4)), 
+              url('../images/contact-bg.jpg') no-repeat center center;
+  background-size: cover;
+  padding: 150px 0;
+}
+
+
+
+.contact-msg span {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px; /* DMの案内は少しだけ小さくすると上品です */
+  color: #666;
+}
+
+.contact-msg {
+  font-family: var(--font-en);
+  font-size: 16px;
+  line-height: 2;
+  margin-bottom: 50px;
+  letter-spacing: 0.05em;
+  color: #333;
+}
+
+/* ボタンを際立たせる */
+.mail-btn {
+  display: inline-block;
+  text-decoration: none; /* 下線を消す */
+  padding: 20px 60px;
+  background-color: rgba(255, 255, 255, 0.7); /* 少しだけ透けた白 */
+  border: 1px solid #ccc;
+  border-radius: 100px;
+  color: #333;
+  transition: all 0.5s ease;
+}
+
+.mail-btn:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.contact-sns {
+  margin-top: 50px;
+}
+
+.contact-sns img {
+  width: 24px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.contact-sns a:hover img {
+  opacity: 1;
+}
+
+/* --- フッター全体の縦幅をタイトに --- */
+/* --- フッター全体の縦幅 --- */
+.footer {
+  background-color: #f9f8f6;
+  padding: 60px 0 30px;
+}
+
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* 下揃えでスッキリ */
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-name {
+  font-family: var(--font-en);
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+
+.footer-title {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 25px;
+}
+
+/* --- ★枠内を流れるメッセージ（フッター版） --- */
+.welcome-footer {
+  display: block;
+  width: 280px; /* 枠の幅をお好みで調整 */
+  border: 1px solid #a2a2a2;
+  border-radius: 50px;
+  padding: 8px 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none; /* 下線を消す */
+  color: #333;
+}
+
+.welcome-inner p {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 13px;
+  padding-left: 100%; /* 開始位置を枠の右端に */
+  animation: flow-text 10s linear infinite;
+}
+
+@keyframes flow-text {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-200%); } /* 文字が左に消え去るまで */
+}
+
+/* --- 右側ナビ --- */
+.footer-right {
+  text-align: right;
+}
+/* ナビゲーション全体の右寄せ設定 */
+.footer-nav ul {
+  list-style: none;    /* ★これで黒丸が消えます */
+  padding: 0;
+  margin: 0;
+  text-align: right;   /* 全体を右に寄せる */
+}
+
+.footer-nav li {
+  margin-bottom: 12px;
+}
+
+.footer-nav a {
+  text-decoration: none;
+  color: #555;
+  font-family: var(--font-en);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  display: inline-block; /* 幅を持たせるために必要 */
+}
+
+/* ★「Contact ↗︎」の矢印だけ右にはみ出させるテクニック */
+.footer-nav a span {
+  position: absolute;  /* 矢印を浮かせる */
+  margin-left: 4px;    /* 文字との隙間 */
+  /* ここで矢印を「配置の計算外」にするので、文字の端が上のHomeなどと揃います */
+}
+
+.copyright {
+  text-align: center;
+  font-size: 10px;
+  color: #aaa;
+  margin-top: 40px;
+}
+
+
+
+/* ------------Works下層ページ----------- */
+
+/* =================================================
+  Works Detail (下層ページ)
+================================================= */
+
+/* 基本レイアウト */
+.work-detail {
+  background-color: var(--bg-color);
+  padding-bottom: 100px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 10%;
+}
+
+/* 1. 導入セクション */
+.work-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 170px;
+  margin-bottom: 40px;
+}
+
+.work-intro h1 {
+  font-family: var(--font-jp-gothic);
+  font-size: 2.4rem;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+.intro-text .category {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.meta-list {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 14px 0;
+  font-size: 0.8rem;
+}
+
+.period-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.period-row {
+  display: flex;
+  width: 150px; /* ここで全体の幅を広げて間隔を作る */
+  justify-content: space-between; /* 左右に振り分け */
+}
+
+/* 日付（1日、3日...）の縦のラインをピタッと揃える */
+.period-row .value {
+  width: 40px; 
+  text-align: left;
+}
+/* 2. メインビジュアル */
+.main-visual {
+  width: 80%;
+  margin-bottom: 80px;
+  justify-self: center;
+}
+
+.main-visual img {
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  display: block;
+  gap: 10px;
+}
+
+.main-visual .sub {
+  margin-top: 20px;
+}
+
+
+/* 3. コンテンツグリッド（2カラム） */
+.work-content {
+  margin-top: 80px;
+}
+
+
+.row {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    padding: 36px 55px;
+    border-bottom: 1px solid rgba(55, 55, 55, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* スマホ用の調整 */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;    /* 縦並びに */
+    padding: 40px 20px;            /* スマホでは余白を少し詰める */
+  }
+}
+
+.row:first-child {
+  border-top: 1px solid rgba(55, 55, 55, 0.1);
+}
+
+.row-label {
+  font-family: var(--font-jp-gothic);
+  font-size: 0.95rem;
+  color: #888;
+}
+
+.row-body {
+  font-family: var(--font-jp-gothic);
+  font-size: 1rem;
+  line-height: 2.2; /* 文章をゆったり読ませる */
+}
+
+/* デザインガイド画像部分 */
+.design-guide-box {
+  background-color: var(--white);
+  padding: 50px;
+  margin-top: 40px;
+  border-radius: 4px;
+}
+
+.design-guide-box img {
+  width: 100%;
+  height: auto;
+}
+
+/* ツールタグ */
+/* .tool-tags span {
+  display: inline-block;
+  background-color: var(--white);
+  padding: 4px 18px;
+  border-radius: 20px;
+  margin-right: 10px;
+  font-size: 0.85rem;
+} */
+
+.preview-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #373737; /* 少し薄めの色で */
+  margin-bottom: 8px;
+  text-transform: uppercase; /* 大文字にするとより洗練されます */
+}
+
+.row.preview {
+  grid-template-columns:none;
+}
+
+.works-preview {
+  display: flex;
+  flex-direction: row;
+  gap: 60px; /* PC版とスマホ版の間の余白 */
+  align-items: start;
+  padding: 0;
+}
+
+.preview-frame {
+  width: 100%;
+  height: auto; /* ここで「窓」の高さを決める */
+  overflow-y: auto;
+  border: 1px solid rgba(152, 152, 152, 0.5); /* 繊細な枠線 */
+  background: #fff;
+}
+
+/* PC版は少し横幅を持たせる */
+.pc-view {
+  max-width: 1000px;
+}
+
+/* スマホ版は実機に近い横幅にする */
+.sp-view {
+  width: 90%;        /* 固定じゃなく、画面に対する割合にする */
+  max-width: 430px;  /* でも最大375pxまで */
+  aspect-ratio: 2 / 2.9;
+}
+
+.preview-frame.pc-view {
+  width: 100%;       /* 親要素に対して全幅 */
+  max-width: 1000px; /* 大きくなりすぎないよう制限（任意） */
+  aspect-ratio: 16 / 9; /* これだけで比率を固定！ */
+  overflow-y: auto;  /* 中身はスクロール可能に */
+}
+
+/* スクロールを滑らかにする */
+.preview-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+
+
+.musubi {
+  color: #373737;
+}
+
+
+/* ボタンエリア */
+.btn-area {
+  text-align: center;
+  margin: 80px 0;
+}
+
+.btn-site {
+  display: inline-block;
+  padding: 16px 60px;
+  border: 1px solid var(--text);
+  border-radius: 50px;
+  color: var(--text);
+  text-decoration: none;
+  font-family: var(--font-jp-gothic);
+  transition: 0.3s ease;
+}
+
+.btn-site:hover {
+  background-color: var(--text);
+  color: var(--white);
+}
+
+/* =================================================
+  レスポンシブ (スマホ対応)
+================================================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 25px;
+  }
+
+  .work-intro {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 80px;
+  }
+
+  .row {
+    grid-template-columns: 1fr; /* 縦並び */
+    gap: 15px;
+    padding: 40px 0;
+  }
+
+  .row-label {
+    font-weight: bold;
+    color: var(--text);
+  }
+
+  .design-guide-box {
+    padding: 20px;
+  }
+}
